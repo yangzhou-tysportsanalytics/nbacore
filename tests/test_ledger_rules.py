@@ -93,3 +93,22 @@ def test_pbp_possession_map_putback_and_held_ball():
     assert p["end_type"].to_list()[:2] == ["made_fg", "jump_ball_lost"]
     assert m[3] == m[4] == m[5] == 0  # the putback rebound belongs to the scoring possession
     assert m[6] == 1 and m[7] == 1  # held ball: jump ball and its turnover end B's possession
+
+
+def test_putback_rebound_listed_after_the_make():
+    from nbacore.ledger import pbp_possession_map, putback_rebound_order
+
+    rows = _start() + [
+        (3, 1, 690.0, 2, 1, 4, 21, A, None, "MISS Jump Shot", None),
+        (4, 1, 689.0, 1, 1, 4, 22, A, None, "Tip Layup Shot (2 PTS)", None),
+        (9, 1, 689.0, 4, 0, 4, 22, A, None, "REBOUND (Off:1 Def:0)", None),  # filed late
+        (10, 1, 670.0, 2, 1, 4, 31, B, None, None, "MISS Jump Shot"),
+        (11, 1, 669.0, 4, 0, 4, 32, B, None, None, "REBOUND (Off:1 Def:0)"),  # normal order
+    ]
+    pb = putback_rebound_order(_pbp(rows))
+    assert pb.select("event_num", "putback_event_num", "missed_shot_event_num").rows() == [
+        (9, 4, 3)
+    ]
+    m = pbp_possession_map(_pbp(rows))
+    flags = dict(m.select("event_num", "oreb_listed_after_putback").iter_rows())
+    assert flags[9] and not flags[11]

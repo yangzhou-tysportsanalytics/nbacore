@@ -65,8 +65,13 @@ CONFIGS = {
     "handler": HandlerL2Config(),
     "flight": FlightConfig(),
     "pass": PassConfig(),
-    # v1.3: the ball is not "in hand" above 10 ft (late releases 14.8 % -> 6.1 %)
-    "shot": ShotEventConfig(shot=ShotTimeConfig(shooter_only=True)),
+    # v1.3: only the pbp shooter's hands count (late releases 14.8 % -> 5.1 %); v1.6: a tip is
+    # searched after the miss left the rim, wider window and last-hand fallback when neither rim
+    # contact nor apex is found
+    "shot": ShotEventConfig(
+        shot=ShotTimeConfig(shooter_only=True, wide_before_s=10.0, hand_fallback=True),
+        after_miss_from_rim=True,
+    ),
     "stop": StopConfig(),
     "screen": ScreenConfig(),
     "motion": MotionConfig(),

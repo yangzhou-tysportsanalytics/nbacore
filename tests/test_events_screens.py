@@ -61,3 +61,24 @@ def test_off_ball_screen():
     assert r["t_pass_ms"] == T0 + 40 * 25 and r["t_set_start_ms"] <= r["t_contact_ms"]
     assert r["side_passed"] in ("left", "right")
     assert not r["xy_shared_at_contact"]
+
+
+def test_screen_confidence_orders_the_obvious_cases():
+    import polars as pl
+
+    from nbacore.events.screens import screen_confidence
+
+    df = pl.DataFrame(
+        {
+            "x": [70.0, 86.0],
+            "y": [30.0, 25.0],
+            "user_speed_fts": [15.0, 1.0],
+            "def_mean_speed_m05_0": [14.0, 1.0],
+            "min_dist_ft": [1.5, 5.0],
+            "t_pass_ms": [1, None],
+            "ball_in_flight_at_contact": [False, True],
+            "on_ball": [False, False],
+        }
+    )
+    s = screen_confidence(df).to_list()
+    assert 0 < s[1] < 0.2 < 0.8 < s[0] < 1  # a moving user passing a close screen vs board crashing

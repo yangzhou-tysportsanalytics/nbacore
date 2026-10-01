@@ -133,3 +133,31 @@ def test_v13_release_never_later_than_ghost(gid):
     j = j.filter(pl.col("method") != "duplicate_release")
     assert (j["t_release_ms"] <= j["t_terminal"]).all()
     assert (j["t_release_ms"] == j["t_terminal"]).mean() >= 0.75
+
+
+def test_v16_tip_release_after_the_miss_left_the_rim():
+    """Tip after a miss (0021500195 ev 455 miss, 456 tip-in): with ``after_miss_from_rim``
+    the tip's release is searched after the miss left the rim zone, not 0.12 s after the miss's
+    release."""
+    from nbacore.events.build import CONFIGS
+
+    gid = "0021500195"
+    if not (paths.release_dir("v1.5") / "MANIFEST.json").exists():
+        pytest.skip("release v1.5 not present")
+    fr, fi = L.frames(gid, "v1.5"), L.frame_index(gid, "v1.5")
+    s = shot_events(
+        fr,
+        fi,
+        L.pbp("v1.5", game_id=gid),
+        L.attack_direction("v1.5", game_id=gid),
+        L.handler(gid, "v1.5"),
+        CONFIGS["shot"],
+    )
+    t = dict(
+        s.filter(pl.col("pbp_event_num").is_in([455, 456]))
+        .select("pbp_event_num", "t_release_ms")
+        .iter_rows()
+    )
+    rim = s.filter(pl.col("pbp_event_num") == 455)["t_rim_ms"][0]
+    assert t[456] - t[455] > 400
+    assert t[456] >= rim

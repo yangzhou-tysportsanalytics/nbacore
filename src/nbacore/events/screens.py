@@ -143,8 +143,52 @@ SCREEN_SCHEMA: dict[str, pl.DataType] = {
     "screened_def_is_user_def": pl.Boolean,
     "dup_group": pl.Int32,
     "screen_group_uid": pl.Utf8,
+    # v1.6: estimated probability that the candidate is a real screen (``screen_confidence``)
+    "screen_confidence": pl.Float32,
     "event_uid": pl.Utf8,
 }
+
+# ``screen_confidence`` (v1.6): logistic score fitted on a manual review of 175 v1.1
+# candidates matched to the v1.3 build (84 real; 23 games, 48 clips), ridge 3.0 on standardized
+# features, coefficients here on the raw scale. Game-grouped 5-fold out-of-fold AUC 0.83 (off-ball
+# 0.80, on-ball 0.72). Off-ball, keeping the top half by score raised precision on the reviewed
+# set from 37 % to 57 % and kept 77 % of the real screens. A ranking aid calibrated only on that
+# sample: moving screens were not in it, and it does not target illegal screens.
+CONFIDENCE_INTERCEPT = -1.6387
+CONFIDENCE_COEF = {
+    "user_speed_fts": 0.1047,  # clipped to [0, 30]
+    "def_mean_speed_m05_0": 0.1028,  # clipped to [0, 30]
+    "dist_basket_ft": 0.0544,  # contact point to the nearer basket
+    "min_dist_ft": -0.4270,
+    "has_pass": 0.6751,  # U passes the screener (t_pass_ms found)
+    "ball_in_flight_at_contact": -1.4002,
+    "on_ball": 0.4662,
+}
+HOOPS_XY = ((5.25, 25.0), (88.75, 25.0))
+
+
+def screen_confidence(df: pl.DataFrame) -> pl.Series:
+    """``screen_confidence`` of screen-candidate rows (see ``CONFIDENCE_COEF``)."""
+    dist = pl.min_horizontal(
+        *[((pl.col("x") - hx) ** 2 + (pl.col("y") - hy) ** 2).sqrt() for hx, hy in HOOPS_XY]
+    )
+    feats = {
+        "user_speed_fts": pl.col("user_speed_fts").fill_null(0).clip(0, 30),
+        "def_mean_speed_m05_0": pl.col("def_mean_speed_m05_0").fill_null(0).clip(0, 30),
+        "dist_basket_ft": dist.fill_null(0),
+        "min_dist_ft": pl.col("min_dist_ft").fill_null(0),
+        "has_pass": pl.col("t_pass_ms").is_not_null().cast(pl.Float64),
+        "ball_in_flight_at_contact": pl.col("ball_in_flight_at_contact")
+        .fill_null(False)
+        .cast(pl.Float64),
+        "on_ball": pl.col("on_ball").fill_null(False).cast(pl.Float64),
+    }
+    logit = pl.lit(CONFIDENCE_INTERCEPT)
+    for k, b in CONFIDENCE_COEF.items():
+        logit = logit + b * feats[k].cast(pl.Float64)
+    return df.select((1 / (1 + (-logit).exp())).cast(pl.Float32).alias("screen_confidence"))[
+        "screen_confidence"
+    ]
 
 
 def _runs(mask: np.ndarray) -> list[tuple[int, int]]:
@@ -180,8 +224,10 @@ def screen_candidates(
         rows += _period(
             gid, int(period), frames.filter(pl.col("period") == period), h, dir_map, cfg
         )
-    out = pl.DataFrame(rows, schema=SCREEN_SCHEMA)
-    return _dup_groups(out, cfg)
+    out = _dup_groups(pl.DataFrame(rows, schema=SCREEN_SCHEMA), cfg)
+    if out.height:
+        out = out.with_columns(screen_confidence(out))
+    return out
 
 
 def _period(gid, period, frames, h, dir_map, cfg) -> list[dict]:
@@ -459,6 +505,7 @@ def _row(gid, period, D, ids, t, hid, free, seg, hoop, T, s, u, dj, k, s0, opp, 
         "xy_shared_at_contact": _shared(D.raw_xy[k], (s, u, dj)),
         "dup_group": None,
         "screen_group_uid": None,
+        "screen_confidence": None,
         "event_uid": f"{gid}:screen_candidate:{int(t[k])}:{sid}",
     }
 

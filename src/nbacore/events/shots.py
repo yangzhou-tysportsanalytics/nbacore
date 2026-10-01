@@ -62,6 +62,11 @@ class ShotEventConfig:
     rim_search_s: float = 3.0
     control_s: float = 0.4
     landing_z_ft: float = 9.0
+    # nbacore v1.6: after a missed shot, the next attempt (a tip / putback) is searched
+    # only after the ball has left the rim zone of that miss. With the previous release as the lower
+    # bound, the tip's "first rim contact" was the miss's own and its release landed 0.12–0.2 s
+    # after the miss's release.
+    after_miss_from_rim: bool = False
 
 
 def shot_events(
@@ -133,7 +138,11 @@ def shot_events(
             t_min=prev_unix,
             shooter_id=int(shooter) if shooter else None,
         )
+        after = _after_release(ball, hs, period, t_rel, hoop, int(team), msg == 1, cfg)
+        rim_exit = after.pop("_t_rim_exit_ms", None)
         prev_unix = t_rel
+        if cfg.after_miss_from_rim and msg == 2 and rim_exit is not None:
+            prev_unix = rim_exit
         rows.append(
             {
                 **base,
@@ -143,7 +152,7 @@ def shot_events(
                 "t_release_ms": t_rel,
                 "method": method,
                 "release_minus_pbp_s": (t_rel - t_term) / 1000,
-                **_after_release(ball, hs, period, t_rel, hoop, int(team), msg == 1, cfg),
+                **after,
             }
         )
     out = pl.DataFrame(rows, schema={k: v for k, v in SHOT_SCHEMA.items() if k != "event_uid"})
@@ -218,6 +227,11 @@ def _after_release(ball, hs, period, t_rel, hoop, team, made, cfg) -> dict:
         k = int(np.flatnonzero(rim)[0])
         out["t_rim_ms"] = int(t[k])
         t_anchor = int(t[k])
+        # last frame of the first stay in the rim zone (internal: lower bound of the next attempt)
+        e = k
+        while e + 1 < rim.size and rim[e + 1]:
+            e += 1
+        out["_t_rim_exit_ms"] = int(t[e])
         # landing: first frame after the rim contact with the ball falling below landing_z
         dz = np.diff(z[k:], prepend=z[k])
         land = np.flatnonzero((z[k:] < cfg.landing_z_ft) & (dz < 0))

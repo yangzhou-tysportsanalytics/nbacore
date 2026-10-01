@@ -3,6 +3,23 @@
 Data releases are immutable; each has a matching code tag `data-vX.Y`. MINOR versions add tables or
 columns, or fix bugs without changing the meaning of existing fields.
 
+## v1.6 (2026-09-29): shot-release fixes, screen confidence, backcourt returns, putback flags
+
+L1 and L5 unchanged; L2 and L3 rebuilt.
+- Shot release: a tip or putback after a teammate's miss is searched only after the missed shot
+  has left the rim zone (before, its release was placed 0.12–0.2 s after the miss's release).
+  When neither a rim contact nor an apex is found, the search window widens to 10 s (method suffix
+  `_wide`), then falls back to the shooter's last in-hand frame (method `hand`, mainly low blocked
+  shots). Season: ball > 10 ft from the shooter at the release 5.13 % → 3.87 %; tip releases within
+  0.4 s of a teammate's miss 1,267 → 104; method `pbp` 3,165 → 1,279.
+- `screen_candidate.screen_confidence`: estimated probability that a candidate is a real screen
+  (logistic score fitted on a manual review; out-of-fold AUC 0.83). Candidates matching the screen
+  fouls of the NBA Last Two Minute reports score far higher than the rest. No candidate is removed.
+- Ledger: `n_backcourt_returns`, `backcourt_return_ms`, `backcourt_return_live_ms`.
+- `pbp_possession`: `oreb_listed_after_putback`, `putback_event_num`, `missed_shot_event_num`.
+- Possession count unchanged; 3,656 `poss_uid` (3.0 %) differ from v1.5 because possession
+  boundaries moved with the shot releases; join across releases on `(game_id, poss_seq)`.
+
 ## v1.5 (2026-09-27): external tables
 
 New L5 tables: advanced metrics and awards (Basketball-Reference via sumitrodatta), RAPTOR

@@ -109,6 +109,17 @@ windows are attached to the wrong pbp event in about 16 % of game-periods.
   unchanged, the rest 0.2–1.1 s earlier. A height cap (`hand_z_ft` 10) was tried and rejected:
   jump shots leave the hand at 10–12 ft, so it moved correct releases 80–120 ms earlier.
   ghost_v1 keeps the earlier any-hand release (parity with ghost-defense).
+- **v1.6**: `ShotEventConfig(after_miss_from_rim=True)`: after a missed FG, the next attempt (a
+  tip or putback) is searched only after the ball has left the rim zone of that miss. With the
+  previous release as the lower bound, the tip's first rim contact was the miss's own, and its
+  release landed 0.12–0.2 s after the miss's release. `ShotTimeConfig(wide_before_s=10.0,
+  hand_fallback=True)`: when neither a rim contact nor an apex is found, the search is repeated
+  with a 10 s window before the pbp time (method suffix `_wide`; the pbp clock lags some shots
+  by more than 5 s), then the last frame with the ball within `hand_ft` of the pbp shooter
+  before the pbp time is taken (method `hand`; mainly low blocked shots that never reach the rim
+  or 9 ft). Season, all 631 games: ball > 10 ft from the shooter at the release 5.13 % → 3.87 %;
+  tip releases within 0.4 s of a teammate's miss 1,267 → 104; method `pbp` 3,165 → 1,279;
+  offensive rebounds detected (`offensive_rebound` true) 10,237 → 11,623. ghost_v1 is unchanged.
 - Validation (small, 25 games, 4,174 FG attempts, `scripts/l2_shot_validate.py`):
   - **`t_release_ms` = ghost-defense `t_terminal` for 3,098 / 3,100** shot possessions (also a
     data test on tiny, `tests/test_l2_parity.py`). The 2 others are pbp rows inserted late
@@ -175,6 +186,9 @@ windows are attached to the wrong pbp event in about 16 % of game-periods.
   (n = 998); violations −0.92 / −0.23 / 0.43 (n = 50); timeouts −5.9 / −0.32 / 0.32 (n = 170).**
   `residual_s` is in game-clock seconds; negative = the tracked clock at the anchor shows more time
   left than the pbp second (the pbp clock is floored to whole seconds).
+  All 631 games at v1.5: fouls on a stop 94.1 %, residual −0.92 / −0.22 / +0.49 s
+  (n = 24,757); exact-onset stops only (quality 4) −0.80 / 0.00 / 0.00 s (n = 1,130)
+  (`reports/l3_definitions_check_v1.5.json`).
 
 ## `shot_clock_filled` (`nbacore.shot_clock`)
 
@@ -243,6 +257,19 @@ windows are attached to the wrong pbp event in about 16 % of game-periods.
   manual check of 50 possessions, recall from 412 screens
   in the NBA Last Two Minute (L2M) reports.
 
+- **v1.6 `screen_confidence`**: estimated probability that the candidate is a real screen, a
+  logistic score on user speed, screened-defender speed, distance of the contact to the basket,
+  screener–defender distance, whether U passes the screener, ball in flight at contact and
+  on-ball (coefficients in `nbacore.events.screens.CONFIDENCE_COEF`, fit summary in
+  `reports/l2_screen_confidence_fit.json`; the review labels are not published). Fitted on a
+  manual review of 175 candidates (84 real, 23 games); game-grouped out-of-fold AUC 0.83 (off-ball
+  0.80, on-ball 0.72). Off-ball, keeping the top half by score: precision 37 % → 57 %, 77 % of the
+  real screens kept; top quarter: 81 % precision, 55 % kept. Candidates are never dropped; filter
+  on the score as your use needs. Not calibrated beyond the reviewed sample, moving screens were
+  not in it, and it does not target illegal screens. External check on independent labels (screen
+  fouls in the L2M reports, 272 matched): median score 0.89 on-ball and 0.65 off-ball, against
+  0.59 and 0.26 for all candidates; 95 % / 90 % of them lie above the all-candidate median, so a
+  median cut keeps about nine in ten L2M screens.
 
 ## Drive / cut candidates (`drive_candidate`, `cut_candidate` events)
 

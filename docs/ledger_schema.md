@@ -36,6 +36,7 @@ of a period are contiguous on the tracking axis.
 | `subsegments` | list[struct] | `{kind, t_start_ms, t_end_ms, ref_event_uid}` sorted by time; kinds: `backcourt`, `frontcourt` (ball half; runs < 0.5 s merged), `shot` (release → rim contact / landing; ref = shot event uid), `offensive_rebound` (control instant), `second_chance` (offensive rebound → next release or end), `free_throws` (one per trip; ref = `<game_id>:pbp:<foul event_num>`), `inbound` (release → catch), `dead_ball` (clock stop, clipped) |
 | `t_first_frontcourt_ms`, `t_first_shot_ms` | i64 | |
 | `is_transition` | bool | first frontcourt entry → first release (or end) < 4 s (the threshold of ghost-defense's half-court view) |
+| `n_backcourt_returns`, `backcourt_return_ms`, `backcourt_return_live_ms` | i16, i32, i32 | v1.6: number and total duration of `backcourt` runs after the first `frontcourt` run; the last excludes the time inside `dead_ball` sub-segments. Null when the possession never reached the frontcourt |
 | `has_jump_ball`, `has_technical`, `has_flagrant`, `has_clear_path` | bool | pbp events of the possession |
 | `data_gap` | bool | a tracking hole during live play (the game clock ran > 0.5 s across it) |
 | `ghost_v1_window_uids` | list[str] | ghost_v1 windows linked to the possession |
@@ -49,7 +50,29 @@ included, and possessions that end with the period without a shot, free throw or
 added. Acceptance: |season total difference| ≤ 3 % against the aligned estimate **and** the 95th
 percentile of the per-game |difference| ≤ 3.5 %; the classic estimate is reported alongside.
 
+**Offence agreement with tracking** (v1.5, all 631 games; `reports/l3_definitions_check_v1.5.json`):
+on running-clock frames with a ball handler (35.8 M frames) the handler's team is the ledger offence
+in 97.4 %; the shooter's team is the ledger offence for 99.68 % of 103,236 shot releases. Every
+running-clock frame lies in some possession (possessions tile each period by construction).
 
+**How `backcourt` / `frontcourt` are decided** (v1.6 note). Per ball frame of the
+possession, the half is the side of the midcourt line (x = 47 ft) the *ball* is on, relative to
+the basket the offence attacks; runs shorter than 0.5 s are merged into the previous run. This is
+a ball-position rule, not the rulebook's backcourt status (which also needs the player's feet),
+and it runs through dead balls. So a `backcourt` run after the first `frontcourt` run is not a
+backcourt violation. On v1.5 (122,726 possessions with sub-segments) 3.1 % have one; of the
+3,919 such runs:
+- 66 % lie mostly inside `dead_ball` sub-segments: the ball is carried across during a stoppage;
+- 2 % start within 4 s of a shot of the offence (long rebounds, tip-outs);
+- 33 % are other live play. Among those, the offence controls the ball in 74 % (e.g. deflections
+  recovered in the backcourt; the frontcourt run before the return reaches a median 25 ft past
+  midcourt, so these are not mainly near-line crossings). The defence controls it in 26 %: the
+  possession has in fact changed before the ledger end (end anchored late, about 0.3 % of
+  possessions).
+
+Use `backcourt_return_live_ms > 0` to find the live cases. An analysis that treats every
+backcourt run after the first frontcourt entry as live play of the possession is not affected by
+the flag.
 
 ## `fouls.parquet` — one row per pbp foul
 
@@ -113,6 +136,7 @@ as `start_event_num < event_num <= end_event_num` miss or misplace rows.
 | `game_id`, `event_num` | the pbp row |
 | `poss_seq`, `poss_uid` | the ledger possession it belongs to; null for rows before any offence is known |
 | `role` | `end_event` (the row that ends the possession), `start_event` (starts it, when it is not also the end of the previous one), `inside`, `between_possessions` (e.g. a period start before the tip) |
+| `oreb_listed_after_putback`, `putback_event_num`, `missed_shot_event_num` | v1.6: the offensive rebound is listed after the putback it led to; the putback's and the missed shot's event numbers |
 
 A row that ends a possession (made last free throw, defensive rebound, turnover, lost jump ball)
 belongs to it; rows the ledger treats as part of the scoring possession (a putback rebound listed

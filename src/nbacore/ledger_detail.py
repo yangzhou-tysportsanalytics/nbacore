@@ -48,6 +48,10 @@ DETAIL_SCHEMA: dict[str, pl.DataType] = {
     "has_clear_path": pl.Boolean,
     "data_gap": pl.Boolean,
     "ghost_v1_window_uids": pl.List(pl.Utf8),
+    # v1.6: backcourt runs after the first frontcourt run of the possession
+    "n_backcourt_returns": pl.Int16,
+    "backcourt_return_ms": pl.Int32,
+    "backcourt_return_live_ms": pl.Int32,  # the part outside dead_ball sub-segments
 }
 TECH_ACTIONS = (11, 12, 13, 16, 17, 18, 19, 25, 30)  # pbp foul action types (technicals)
 
@@ -198,6 +202,9 @@ def possession_details(
             "has_clear_path": "clear_path" in fl,
             "data_gap": None,
             "ghost_v1_window_uids": win_by_poss.get(r["poss_uid"], []),
+            "n_backcourt_returns": None,
+            "backcourt_return_ms": None,
+            "backcourt_return_live_ms": None,
         }
         se = r["start_event_num"]
         m_home = margin_after.get(int(se)) if se is not None else period_first.get(per)
@@ -271,6 +278,19 @@ def possession_details(
         base["t_first_frontcourt_ms"], base["t_first_shot_ms"] = t_front, t_shot
         if t_front is not None:
             base["is_transition"] = ((t_shot or t1) - t_front) < transition_s * 1000
+            # backcourt runs after the first frontcourt entry, with the part that
+            # falls in dead balls (ball carried across during stoppages) separated
+            back = [d for d in sub if d["kind"] == "backcourt" and d["t_start_ms"] > t_front]
+            deads = [(d["t_start_ms"], d["t_end_ms"]) for d in sub if d["kind"] == "dead_ball"]
+            tot = sum(d["t_end_ms"] - d["t_start_ms"] for d in back)
+            dead_ov = sum(
+                max(0, min(d["t_end_ms"], e) - max(d["t_start_ms"], s))
+                for d in back
+                for s, e in deads
+            )
+            base["n_backcourt_returns"] = len(back)
+            base["backcourt_return_ms"] = tot
+            base["backcourt_return_live_ms"] = max(0, tot - dead_ov)
         # lineups
         a, b = lineup(per, t0, True), lineup(per, t1, False)
         if a:

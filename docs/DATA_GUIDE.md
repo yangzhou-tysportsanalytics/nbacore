@@ -7,10 +7,10 @@ How to use the nbacore data releases and what to watch out for. Column-level def
 ## 1. Setup
 
 ```python
-# pyproject.toml: nbacore = { git = "https://github.com/yangzhou-tysportsanalytics/nbacore", tag = "data-v1.5" }
+# pyproject.toml: nbacore = { git = "https://github.com/yangzhou-tysportsanalytics/nbacore", tag = "data-v1.6" }
 import nbacore.load as L
 
-V = "v1.5"  # pin the data version in your configuration; do not use "latest"
+V = "v1.6"  # pin the data version in your configuration; do not use "latest"
 L.games(V)  # start here: which games have tracking data, and the train / val / test split
 ```
 
@@ -95,9 +95,11 @@ Code helpers that are not part of a data release:
      off-ball 37 %);
    - recall against the screen fouls of the NBA Last Two Minute reports is 76 % (off-ball 59 %);
    - since v1.3 candidates are generated for the possession's offence only;
+   - since v1.6 `screen_confidence` estimates the probability of a real screen (out-of-fold AUC
+     0.83; see `event_definitions.md`).
 2. **Shot release:**
-   - about 5 % of releases remain implausible (ball > 10 ft from the shooter at the release),
-     mostly with `method` `pbp`, `*_nohand`, `*_anyhand`; filter on `method` if needed;
+   - about 4 % of releases (v1.6) remain implausible, mostly with `method` `pbp`, `*_nohand`,
+     `*_anyhand`; filter on `method` if needed;
    - `ghost_v1` keeps the original ghost-defense release rule; use `release="l2"` to match L2.
 3. **Tracking defects:**
    - in about 2.4 % of frames two players share identical coordinates (an identity merge in the
@@ -108,8 +110,8 @@ Code helpers that are not part of a data release:
    sensitivity analyses.
 5. **Play-by-play quirks:**
    - event numbers are not always in time order; use `nbacore.ledger.order_pbp`;
-   - offensive rebounds are often listed after the putback they led to; the ledger already
-     counts such rows in the scoring possession;
+   - offensive rebounds are often listed after the putback they led to (flagged in
+     `pbp_possession` since v1.6);
    - game 0021500916 has a spurious "start of period 5" row.
 6. **Box scores:** 206 appearances of a few seconds have `minutes` = 0; count games played with
    `comment` null.
@@ -130,5 +132,6 @@ Code helpers that are not part of a data release:
 | v1.3 | L2 fixes (shot release, free-throw alignment, candidates of the offence only), screen kinds and groups, `pbp_possession`; L5 shot locations, player bio, box scores |
 | v1.4 | `ghost_v1(release="l2")` |
 | v1.5 | L5 advanced metrics, awards, RAPTOR, referees |
+| v1.6 | shot-release fixes (tips, fallbacks), `screen_confidence`, backcourt-return columns, putback flags |
 
 Full notes: `CHANGELOG.md`.

@@ -276,6 +276,71 @@ def pbp_possessions(pbp_game: pl.DataFrame, _event_map: dict | None = None) -> p
     )
 
 
+def putback_rebound_order(pbp_game: pl.DataFrame) -> pl.DataFrame:
+    """Offensive rebounds that the scorer listed after the putback they led to.
+
+    Walking the pbp in ``order_pbp`` order, a missed field goal of team T with no rebound yet,
+    followed by another field goal S of T (the putback), and then a rebound of T at S's clock:
+    if S was made, that rebound belongs to the earlier miss (it must have happened before S);
+    if S was missed, the first of two consecutive T rebounds at S's clock does. Returns one row per
+    such rebound: ``game_id, event_num`` (the rebound), ``putback_event_num`` (S) and
+    ``missed_shot_event_num`` (the miss it rebounds). The ledger already treats these rows as part
+    of the scoring possession; this table only exposes the pattern."""
+    rows = []
+    p = order_pbp(pbp_game)
+    evs = list(p.iter_rows(named=True))
+    miss = None  # the latest missed FG without a rebound: (team, event_num)
+    putback = None  # (team, event_num, clock, made, earlier miss event_num)
+    for i, ev in enumerate(evs):
+        msg, team = int(ev["msg_type"]), _team_of(ev)
+        if msg in (12, 13):
+            miss = putback = None
+            continue
+        if msg in (1, 2):
+            if miss is not None and team == miss[0]:
+                putback = (team, int(ev["event_num"]), ev["pctime_sec"], msg == 1, miss[1])
+            else:
+                putback = None
+            miss = (team, int(ev["event_num"])) if msg == 2 else None
+            continue
+        if msg == 4:
+            if putback is not None and team == putback[0] and ev["pctime_sec"] == putback[2]:
+                nxt = evs[i + 1] if i + 1 < len(evs) else None
+                second = (
+                    nxt is not None
+                    and int(nxt["msg_type"]) == 4
+                    and _team_of(nxt) == team
+                    and nxt["pctime_sec"] == putback[2]
+                )
+                if putback[3] or second:
+                    rows.append(
+                        {
+                            "game_id": ev["game_id"],
+                            "event_num": int(ev["event_num"]),
+                            "putback_event_num": putback[1],
+                            "missed_shot_event_num": putback[4],
+                        }
+                    )
+                    putback = None
+                    continue
+            putback = None
+            miss = None  # this rebound closes the latest miss
+            continue
+        if msg in (5, 6, 7, 10):  # turnover, foul, violation, jump ball: sequence broken
+            miss = None
+            if ev["pctime_sec"] != (putback[2] if putback else None):
+                putback = None
+    return pl.DataFrame(
+        rows,
+        schema={
+            "game_id": pl.Utf8,
+            "event_num": pl.Int32,
+            "putback_event_num": pl.Int32,
+            "missed_shot_event_num": pl.Int32,
+        },
+    )
+
+
 def pbp_possession_map(pbp_game: pl.DataFrame, ledger: pl.DataFrame | None = None) -> pl.DataFrame:
     """Every pbp row of one game → the ledger possession it was assigned to:
     ``event_num, poss_seq`` (+ ``poss_uid`` with a timed ``ledger``). A row that ends a possession
@@ -284,7 +349,9 @@ def pbp_possession_map(pbp_game: pl.DataFrame, ledger: pl.DataFrame | None = Non
     free throws) belong to it too; ``poss_seq`` is null for rows before any offence is known.
     ``role``: ``end_event`` (the row that ends the possession), ``start_event`` (the row that
     starts it, when it is not also the end of the previous one), ``inside``,
-    ``between_possessions`` (no offence known: e.g. a period start before the tip)."""
+    ``between_possessions`` (no offence known: e.g. a period start before the tip).
+    ``oreb_listed_after_putback`` / ``putback_event_num`` / ``missed_shot_event_num``: the
+    offensive rebound was listed after the putback it led to (``putback_rebound_order``)."""
     emap: dict = {}
     poss = pbp_possessions(pbp_game, _event_map=emap)
     out = pl.DataFrame(
@@ -302,7 +369,12 @@ def pbp_possession_map(pbp_game: pl.DataFrame, ledger: pl.DataFrame | None = Non
         .otherwise(pl.lit("inside"))
         .alias("role")
     )
-    out = out.select("game_id", "event_num", "poss_seq", "role")
+    pb = putback_rebound_order(pbp_game).drop("game_id")
+    out = (
+        out.select("game_id", "event_num", "poss_seq", "role")
+        .join(pb, on="event_num", how="left")
+        .with_columns(pl.col("putback_event_num").is_not_null().alias("oreb_listed_after_putback"))
+    )
     if ledger is not None:
         out = out.join(ledger.select("poss_seq", "poss_uid"), on="poss_seq", how="left")
     return out

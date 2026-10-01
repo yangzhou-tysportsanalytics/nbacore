@@ -42,22 +42,24 @@ Coordinate-free derived tables are attached to the GitHub releases:
 
 | package | release | MANIFEST.json sha256 | zip sha256 |
 |---|---|---|---|
+| `nbacore-derived-v1.6-shot-p1` | `data-v1.6` | `1551d916078c58df702cf9d32a438eed6c54e48a3c1accd4fd582ae0db855fda` | `d44a4a92f584204f10972d56a3ed5c3c9cc278df39fbe53d5c305aacd7c0a92f` |
 | `nbacore-derived-v1.5-shot-p1` | `data-v1.5` | `6a7080088b3d00dde818551bf2d5c5b54251440d27283fabd9d923b0372ac4e0` | `e742442c68b0701d31cf65152a4c1b4b7abc0a93b1ab88da695a58935b9d8f31` |
 
 Contents: games and splits, rosters, play-by-play, half-court possession windows, possession
 ledger, screen / pass / handoff / shot / touch events, per-frame shot-clock readings, RAPTOR
 (CC BY 4.0, FiveThirtyEight). No player or ball tracks; the only point coordinates are shot
 release locations.
+Built with `scripts/export_public_data.py --coords shot`.
 
 ## Use
 
 ```python
 import nbacore.load as L
 
-L.games("v1.5")  # games, status, split / fold / parity
-L.frames("0021500001", "v1.5")  # 25 Hz frames of one game
-L.events("0021500001", "shot_release", "v1.5")
-L.ledger("v1.5")  # one row per team possession
+L.games("v1.6")  # games, status, split / fold / parity
+L.frames("0021500001", "v1.6")  # 25 Hz frames of one game
+L.events("0021500001", "shot_release", "v1.6")
+L.ledger("v1.6")  # one row per team possession
 ```
 
 Start with `docs/DATA_GUIDE.md` (layers, loaders, keys, caveats); definitions are in

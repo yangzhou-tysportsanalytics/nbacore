@@ -23,7 +23,7 @@ If neither anchor exists the pbp time is kept (``method == "pbp"``).
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 import numpy as np
 import polars as pl
@@ -50,9 +50,62 @@ class ShotTimeConfig:
     # ball in flight passing over a teammate counted as in hand and the release was placed
     # mid-air (14.8 % of shots on v1.2; in 71 % of those the "holder" was not the pbp shooter).
     shooter_only: bool = False
+    # nbacore v1.6: fallbacks when neither a rim contact nor an apex is found (method "pbp").
+    # ``wide_before_s``: search again with this window before the pbp time (the pbp clock lags
+    # the shot by > 5 s for some attempts); the method gets the suffix "_wide". ``hand_fallback``:
+    # then take the last frame with the ball within ``hand_ft`` of the pbp shooter before the pbp
+    # time (low blocked shots never reach the rim or 9 ft); method "hand".
+    wide_before_s: float | None = None
+    hand_fallback: bool = False
 
 
 def refine_shot_release(
+    entities_period: pl.DataFrame,
+    t_pbp: int,
+    offense_team_id: int,
+    hoop: np.ndarray,
+    cfg: ShotTimeConfig | None = None,
+    t_min: int | None = None,
+    shooter_id: int | None = None,
+) -> tuple[int, int | None, str]:
+    """Return (t_release_unix_ms, shooter_player_id or None, method).
+
+    ``entities_period``: deduped entity rows of the period. ``hoop``: (2,) hoop centre in the
+    raw (unflipped) frame. ``t_min``: unix_ms of the previous terminal event (exclusive).
+    ``shooter_id``: the pbp shooter, used with ``cfg.shooter_only`` and ``cfg.hand_fallback``.
+    """
+    cfg = cfg or ShotTimeConfig()
+    if cfg.wide_before_s is None and not cfg.hand_fallback:
+        return _refine(entities_period, t_pbp, offense_team_id, hoop, cfg, t_min, shooter_id)
+    base = replace(cfg, wide_before_s=None, hand_fallback=False)
+    res = _refine(entities_period, t_pbp, offense_team_id, hoop, base, t_min, shooter_id)
+    if res[2] != "pbp":
+        return res
+    if cfg.wide_before_s is not None:
+        wide = replace(base, before_s=cfg.wide_before_s)
+        r2 = _refine(entities_period, t_pbp, offense_team_id, hoop, wide, t_min, shooter_id)
+        if r2[2] != "pbp":
+            return r2[0], r2[1], r2[2] + "_wide"
+    if cfg.hand_fallback and shooter_id is not None:
+        before = cfg.wide_before_s if cfg.wide_before_s is not None else cfg.before_s
+        lo = t_pbp - int(before * 1000)
+        if t_min is not None:
+            lo = max(lo, t_min + 1)
+        w = entities_period.filter(pl.col("unix_ms").is_between(lo, t_pbp))
+        b = w.filter(pl.col("team_id") == BALL_ID).select("unix_ms", "x", "y")
+        s = w.filter(pl.col("player_id") == shooter_id).select(
+            "unix_ms", pl.col("x").alias("_sx"), pl.col("y").alias("_sy")
+        )
+        j = b.join(s, on="unix_ms").filter(
+            ((pl.col("x") - pl.col("_sx")) ** 2 + (pl.col("y") - pl.col("_sy")) ** 2).sqrt()
+            <= cfg.hand_ft
+        )
+        if j.height:
+            return int(j["unix_ms"].max()), shooter_id, "hand"
+    return res
+
+
+def _refine(
     entities_period: pl.DataFrame,
     t_pbp: int,
     offense_team_id: int,
