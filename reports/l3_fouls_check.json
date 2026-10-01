@@ -1,0 +1,357 @@
+{
+ "games": 631,
+ "fouls": 26321,
+ "free_throws": 29119,
+ "ft_linked": 29088,
+ "ft_linked_frac": 0.9989354030014767,
+ "ft_linked_frac_technical": 0.9910025706940874,
+ "ft_linked_frac_other": 0.9991531703186197,
+ "nonshooting_in_penalty_with_ft": 0.9989986648865153,
+ "nonshooting_not_in_penalty_with_ft": 0.015619235026442012,
+ "per_detail": [
+  {
+   "foul_detail": "shooting",
+   "n": 11499,
+   "with_ft": 0.9981737542394991,
+   "ft_per_foul": 1.8123315070875727
+  },
+  {
+   "foul_detail": "personal",
+   "n": 8303,
+   "with_ft": 0.24424906660243287,
+   "ft_per_foul": 0.4893412019751897
+  },
+  {
+   "foul_detail": "loose_ball",
+   "n": 1558,
+   "with_ft": 0.25609756097560976,
+   "ft_per_foul": 0.5044929396662388
+  },
+  {
+   "foul_detail": "offensive",
+   "n": 1527,
+   "with_ft": 0.0,
+   "ft_per_foul": 0.0
+  },
+  {
+   "foul_detail": "personal_take",
+   "n": 877,
+   "with_ft": 0.6830102622576967,
+   "ft_per_foul": 1.3660205245153934
+  },
+  {
+   "foul_detail": "offensive_charge",
+   "n": 651,
+   "with_ft": 0.0,
+   "ft_per_foul": 0.0
+  },
+  {
+   "foul_detail": "shooting_block",
+   "n": 508,
+   "with_ft": 0.9960629921259843,
+   "ft_per_foul": 1.860236220472441
+  },
+  {
+   "foul_detail": "defensive_3_seconds",
+   "n": 392,
+   "with_ft": 0.9974489795918368,
+   "ft_per_foul": 0.9974489795918368
+  },
+  {
+   "foul_detail": "personal_block",
+   "n": 389,
+   "with_ft": 0.2416452442159383,
+   "ft_per_foul": 0.4832904884318766
+  },
+  {
+   "foul_detail": "technical",
+   "n": 352,
+   "with_ft": 0.9517045454545454,
+   "ft_per_foul": 0.9829545454545454
+  },
+  {
+   "foul_detail": "flagrant_1",
+   "n": 55,
+   "with_ft": 1.0,
+   "ft_per_foul": 1.9636363636363636
+  },
+  {
+   "foul_detail": "double_technical",
+   "n": 48,
+   "with_ft": 0.041666666666666664,
+   "ft_per_foul": 0.041666666666666664
+  },
+  {
+   "foul_detail": "clear_path",
+   "n": 40,
+   "with_ft": 1.0,
+   "ft_per_foul": 2.0
+  },
+  {
+   "foul_detail": "inbound",
+   "n": 32,
+   "with_ft": 1.0,
+   "ft_per_foul": 1.96875
+  },
+  {
+   "foul_detail": "away_from_play",
+   "n": 29,
+   "with_ft": 1.0,
+   "ft_per_foul": 1.103448275862069
+  },
+  {
+   "foul_detail": "double_personal",
+   "n": 21,
+   "with_ft": 0.0,
+   "ft_per_foul": 0.0
+  },
+  {
+   "foul_detail": "delay_of_game",
+   "n": 19,
+   "with_ft": 0.9473684210526315,
+   "ft_per_foul": 0.9473684210526315
+  },
+  {
+   "foul_detail": "flagrant_2",
+   "n": 7,
+   "with_ft": 1.0,
+   "ft_per_foul": 2.0
+  },
+  {
+   "foul_detail": "hanging_technical",
+   "n": 6,
+   "with_ft": 1.0,
+   "ft_per_foul": 1.0
+  },
+  {
+   "foul_detail": "taunting",
+   "n": 5,
+   "with_ft": 1.0,
+   "ft_per_foul": 1.0
+  },
+  {
+   "foul_detail": "too_many_players",
+   "n": 2,
+   "with_ft": 1.0,
+   "ft_per_foul": 1.0
+  },
+  {
+   "foul_detail": "non_unsportsmanlike_technical",
+   "n": 1,
+   "with_ft": 1.0,
+   "ft_per_foul": 1.0
+  }
+ ],
+ "unlinked_examples": [
+  {
+   "game_id": "0021500009",
+   "event_num": 422,
+   "period": 4,
+   "pctime_sec": 703.0,
+   "team_id": 1610612761,
+   "player_id": 203082,
+   "ft_n": 1,
+   "ft_m": 1,
+   "is_last_ft": true,
+   "ft_kind": "regular",
+   "made": true,
+   "linked_foul_event_num": null
+  },
+  {
+   "game_id": "0021500029",
+   "event_num": 386,
+   "period": 3,
+   "pctime_sec": 309.0,
+   "team_id": 1610612750,
+   "player_id": 1626157,
+   "ft_n": 1,
+   "ft_m": 1,
+   "is_last_ft": true,
+   "ft_kind": "regular",
+   "made": true,
+   "linked_foul_event_num": null
+  },
+  {
+   "game_id": "0021500040",
+   "event_num": 550,
+   "period": 4,
+   "pctime_sec": 120.0,
+   "team_id": 1610612738,
+   "player_id": 202738,
+   "ft_n": null,
+   "ft_m": null,
+   "is_last_ft": false,
+   "ft_kind": "technical",
+   "made": true,
+   "linked_foul_event_num": null
+  },
+  {
+   "game_id": "0021500047",
+   "event_num": 75,
+   "period": 1,
+   "pctime_sec": 245.0,
+   "team_id": 1610612751,
+   "player_id": 201152,
+   "ft_n": 1,
+   "ft_m": 1,
+   "is_last_ft": true,
+   "ft_kind": "regular",
+   "made": true,
+   "linked_foul_event_num": null
+  },
+  {
+   "game_id": "0021500078",
+   "event_num": 107,
+   "period": 1,
+   "pctime_sec": 129.0,
+   "team_id": 1610612739,
+   "player_id": 202684,
+   "ft_n": 1,
+   "ft_m": 2,
+   "is_last_ft": false,
+   "ft_kind": "regular",
+   "made": true,
+   "linked_foul_event_num": null
+  },
+  {
+   "game_id": "0021500078",
+   "event_num": 116,
+   "period": 1,
+   "pctime_sec": 129.0,
+   "team_id": 1610612739,
+   "player_id": 202684,
+   "ft_n": 2,
+   "ft_m": 2,
+   "is_last_ft": true,
+   "ft_kind": "regular",
+   "made": false,
+   "linked_foul_event_num": null
+  },
+  {
+   "game_id": "0021500134",
+   "event_num": 448,
+   "period": 4,
+   "pctime_sec": 643.0,
+   "team_id": 1610612760,
+   "player_id": 203079,
+   "ft_n": 1,
+   "ft_m": 1,
+   "is_last_ft": true,
+   "ft_kind": "regular",
+   "made": true,
+   "linked_foul_event_num": null
+  },
+  {
+   "game_id": "0021500143",
+   "event_num": 299,
+   "period": 3,
+   "pctime_sec": 681.0,
+   "team_id": 1610612756,
+   "player_id": 202688,
+   "ft_n": 1,
+   "ft_m": 1,
+   "is_last_ft": true,
+   "ft_kind": "regular",
+   "made": true,
+   "linked_foul_event_num": null
+  },
+  {
+   "game_id": "0021500200",
+   "event_num": 244,
+   "period": 2,
+   "pctime_sec": 99.0,
+   "team_id": 1610612744,
+   "player_id": 202691,
+   "ft_n": 1,
+   "ft_m": 2,
+   "is_last_ft": false,
+   "ft_kind": "regular",
+   "made": true,
+   "linked_foul_event_num": null
+  },
+  {
+   "game_id": "0021500218",
+   "event_num": 164,
+   "period": 2,
+   "pctime_sec": 392.0,
+   "team_id": 1610612748,
+   "player_id": 204020,
+   "ft_n": 1,
+   "ft_m": 1,
+   "is_last_ft": true,
+   "ft_kind": "regular",
+   "made": true,
+   "linked_foul_event_num": null
+  },
+  {
+   "game_id": "0021500285",
+   "event_num": 337,
+   "period": 3,
+   "pctime_sec": 156.0,
+   "team_id": 1610612765,
+   "player_id": 203083,
+   "ft_n": 1,
+   "ft_m": 1,
+   "is_last_ft": true,
+   "ft_kind": "regular",
+   "made": false,
+   "linked_foul_event_num": null
+  },
+  {
+   "game_id": "0021500302",
+   "event_num": 68,
+   "period": 1,
+   "pctime_sec": 289.0,
+   "team_id": 1610612764,
+   "player_id": 201971,
+   "ft_n": 1,
+   "ft_m": 1,
+   "is_last_ft": true,
+   "ft_kind": "regular",
+   "made": true,
+   "linked_foul_event_num": null
+  },
+  {
+   "game_id": "0021500317",
+   "event_num": 529,
+   "period": 4,
+   "pctime_sec": 37.0,
+   "team_id": 1610612753,
+   "player_id": 203901,
+   "ft_n": 1,
+   "ft_m": 1,
+   "is_last_ft": true,
+   "ft_kind": "regular",
+   "made": true,
+   "linked_foul_event_num": null
+  },
+  {
+   "game_id": "0021500323",
+   "event_num": 406,
+   "period": 4,
+   "pctime_sec": 556.0,
+   "team_id": 1610612761,
+   "player_id": 200768,
+   "ft_n": null,
+   "ft_m": null,
+   "is_last_ft": false,
+   "ft_kind": "technical",
+   "made": true,
+   "linked_foul_event_num": null
+  },
+  {
+   "game_id": "0021500374",
+   "event_num": 556,
+   "period": 4,
+   "pctime_sec": 130.0,
+   "team_id": 1610612738,
+   "player_id": 202738,
+   "ft_n": null,
+   "ft_m": null,
+   "is_last_ft": false,
+   "ft_kind": "technical",
+   "made": true,
+   "linked_foul_event_num": null
+  }
+ ]
+}

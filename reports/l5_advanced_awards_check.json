@@ -1,0 +1,52 @@
+{
+ "advanced_rows": 578,
+ "advanced_players": 476,
+ "mapped_players": 476,
+ "match": {
+  "name+team": 476
+ },
+ "unmatched": [],
+ "map_player_id_unique": true,
+ "tracked_roster_with_advanced": 450,
+ "tracked_roster_players": 450,
+ "games_played_equal_box": 0.9978991596638656,
+ "awards_rows": {
+  "all_star": 26,
+  "award_voting": 75,
+  "season_team": 114
+ },
+ "awards_unmapped": [],
+ "award_winners": [
+  {
+   "award": "dpoy",
+   "player_name_bbref": "Kawhi Leonard"
+  },
+  {
+   "award": "mip",
+   "player_name_bbref": "CJ McCollum"
+  },
+  {
+   "award": "mvp",
+   "player_name_bbref": "Stephen Curry"
+  },
+  {
+   "award": "roy",
+   "player_name_bbref": "Karl-Anthony Towns"
+  },
+  {
+   "award": "smoy",
+   "player_name_bbref": "Jamal Crawford"
+  }
+ ],
+ "raptor_rows": 478,
+ "raptor_unmapped": [
+  "John Holland",
+  "Dorell Wright"
+ ],
+ "outputs": [
+  "$NBA_DATA_ROOT\\scratch\\l5\\bbref_player_map_2015_16.parquet",
+  "$NBA_DATA_ROOT\\scratch\\l5\\advanced_2015_16.parquet",
+  "$NBA_DATA_ROOT\\scratch\\l5\\awards_2015_16.parquet",
+  "$NBA_DATA_ROOT\\scratch\\l5\\raptor_2015_16.parquet"
+ ]
+}

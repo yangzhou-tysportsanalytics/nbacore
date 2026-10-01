@@ -1,0 +1,73 @@
+{
+ "games": 1230,
+ "player_game_rows": 31423,
+ "player_game_rows_with_minutes": 25873,
+ "players": 478,
+ "tracked_roster_players_in_box": 450,
+ "tracked_roster_players": 450,
+ "final_score_agrees_with_pbp": 1229,
+ "final_score_disagrees": [
+  {
+   "game_id": "0021500916",
+   "home_score": 117,
+   "away_score": 115,
+   "score_home": 114,
+   "score_visitor": 112
+  }
+ ],
+ "player_game_agreement_with_pbp": {
+  "fga": 0.9990348608269313,
+  "fgm": 0.9996139443307726,
+  "fg3m": 0.9998841832992318,
+  "fta": 0.9998069721653863,
+  "ftm": 0.999536733196927,
+  "pts": 0.9991506775276995
+ },
+ "player_games_compared": 25903,
+ "games_with_most_disagreeing_player_rows": [
+  {
+   "game_id": "0021501048",
+   "len": 2
+  },
+  {
+   "game_id": "0021500994",
+   "len": 1
+  },
+  {
+   "game_id": "0021500149",
+   "len": 1
+  },
+  {
+   "game_id": "0021500761",
+   "len": 1
+  },
+  {
+   "game_id": "0021501188",
+   "len": 1
+  },
+  {
+   "game_id": "0021500742",
+   "len": 1
+  },
+  {
+   "game_id": "0021500960",
+   "len": 1
+  },
+  {
+   "game_id": "0021500979",
+   "len": 1
+  },
+  {
+   "game_id": "0021500142",
+   "len": 1
+  },
+  {
+   "game_id": "0021501180",
+   "len": 1
+  }
+ ],
+ "outputs": [
+  "$NBA_DATA_ROOT\\scratch\\l5\\box_games_2015_16.parquet",
+  "$NBA_DATA_ROOT\\scratch\\l5\\box_players_2015_16.parquet"
+ ]
+}

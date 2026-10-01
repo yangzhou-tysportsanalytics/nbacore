@@ -1,0 +1,27 @@
+# all data lives under $NBA_DATA_ROOT (default $NBA_DATA_ROOT), outside this repo
+data/
+*.7z
+*.parquet
+*.json.gz
+
+# --- python ---
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# --- large generated media (regenerate via scripts) ---
+reports/**/*.mp4
+reports/**/*.gif
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

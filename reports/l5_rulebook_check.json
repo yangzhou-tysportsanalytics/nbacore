@@ -1,0 +1,78 @@
+{
+ "games": 631,
+ "games_with_shot_clock": 619,
+ "rebound_offensive_rim1": {
+  "n": 7040,
+  "24": 6283,
+  "other": 17,
+  "already_24": 203,
+  "none": 536,
+  "14": 1
+ },
+ "rebound_offensive_rim0": {
+  "n": 458,
+  "already_24": 94,
+  "24": 194,
+  "none": 165,
+  "other": 5
+ },
+ "rebound_defensive_rim1": {
+  "n": 31303,
+  "other": 36,
+  "none": 591,
+  "14": 1,
+  "24": 29864,
+  "already_24": 811
+ },
+ "rebound_defensive_rim0": {
+  "n": 1602,
+  "already_24": 226,
+  "other": 6,
+  "24": 968,
+  "none": 402
+ },
+ "foul_frontcourt_lt14": {
+  "n": 2602,
+  "raised_to_14": 2167,
+  "reset_24": 42,
+  "other": 307,
+  "kept": 86
+ },
+ "foul_frontcourt_ge14": {
+  "n": 2458,
+  "reset_24": 56,
+  "kept": 2055,
+  "other": 347
+ },
+ "foul_backcourt_lt14": {
+  "n": 142,
+  "raised_to_14": 3,
+  "other": 16,
+  "kept": 1,
+  "reset_24": 122
+ },
+ "foul_backcourt_ge14": {
+  "n": 407,
+  "reset_24": 350,
+  "kept": 22,
+  "other": 35
+ },
+ "foul_midcourt_lt14": {
+  "n": 6,
+  "raised_to_14": 4,
+  "reset_24": 2
+ },
+ "foul_midcourt_ge14": {
+  "n": 26,
+  "other": 1,
+  "reset_24": 20,
+  "kept": 5
+ },
+ "penalty": {
+  "n": 11127,
+  "agree": 10968,
+  "in_penalty": 2996,
+  "in_penalty_with_ft": 2994,
+  "not_penalty_with_ft": 157
+ }
+}

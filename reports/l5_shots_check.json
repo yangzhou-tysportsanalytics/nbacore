@@ -1,0 +1,66 @@
+{
+ "rows": 207893,
+ "games": 1230,
+ "linked": 207893,
+ "linked_frac": 1.0,
+ "made_agrees_with_pbp": 0.9989032819767861,
+ "games_fga_equal": 1135,
+ "games_fgm_equal": 1193,
+ "games_in_pbp": 1230,
+ "fga_total": [
+  207893,
+  208049
+ ],
+ "worst_games_fga_diff": [
+  {
+   "game_id": "0021500261",
+   "fga": 168,
+   "fgm": 66,
+   "pbp_fga": 172,
+   "pbp_fgm": 66,
+   "d": -4
+  },
+  {
+   "game_id": "0021500511",
+   "fga": 143,
+   "fgm": 76,
+   "pbp_fga": 147,
+   "pbp_fgm": 77,
+   "d": -4
+  },
+  {
+   "game_id": "0021500907",
+   "fga": 192,
+   "fgm": 78,
+   "pbp_fga": 196,
+   "pbp_fgm": 79,
+   "d": -4
+  },
+  {
+   "game_id": "0021501196",
+   "fga": 146,
+   "fgm": 63,
+   "pbp_fga": 150,
+   "pbp_fgm": 67,
+   "d": -4
+  },
+  {
+   "game_id": "0021500196",
+   "fga": 148,
+   "fgm": 57,
+   "pbp_fga": 152,
+   "pbp_fgm": 58,
+   "d": -4
+  }
+ ],
+ "lateral_sign": 1.0,
+ "tracked_compared": 103124,
+ "official_vs_tracked_release_ft": {
+  "0.5": 3.5910561084747314,
+  "0.75": 6.1215925216674805,
+  "0.9": 14.891959190368652,
+  "0.95": 20.33507537841797
+ },
+ "within_3ft": 0.39960629921259844,
+ "output": "$NBA_DATA_ROOT\\scratch\\l5\\shots_2015_16.parquet"
+}

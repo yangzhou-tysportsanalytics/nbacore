@@ -1,0 +1,25 @@
+{
+ "games": 631,
+ "windows_ghost_v1": 107923,
+ "windows_l2release": 108005,
+ "kept": 107893,
+ "dropped": 30,
+ "added": 112,
+ "end_moved": 10658,
+ "end_moved_frac_of_fg": 0.1343,
+ "end_moved_earlier": 10658,
+ "end_moved_later": 0,
+ "shift_s_quantiles_earlier": {
+  "0.1": 0.241,
+  "0.5": 0.68,
+  "0.9": 0.961
+ },
+ "start_moved": 118,
+ "is_transition_changed": 490,
+ "fg_windows": 79377,
+ "t_terminal_equals_l2_release": 1.0,
+ "shooter_inferred_is_pbp_shooter": 0.9537,
+ "last_handler_1s_before_release_is_pbp_shooter": 0.9477,
+ "no_handler_in_1s_before_release": 0.0096,
+ "build_seconds": 867
+}

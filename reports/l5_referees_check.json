@@ -1,0 +1,68 @@
+{
+ "games": 1230,
+ "games_with_referees": 1230,
+ "games_from_wyattowalsh": 1124,
+ "games_filled_from_pablote": 106,
+ "tracked_games_with_referees": 631,
+ "tracked_games": 631,
+ "officials_per_game": {
+  "3": 1229,
+  "2": 1
+ },
+ "rows_without_official_id": 0,
+ "unmapped_names_in_fill": [],
+ "ambiguous_name_keys": [],
+ "distinct_officials": 66,
+ "pablote_games_matched_to_game_id": 1230,
+ "sources_both_have_game": 1124,
+ "sources_agree_exactly": 1121,
+ "sources_disagree_examples": [
+  {
+   "game_id": "0021501103",
+   "ids_a": [
+    1148,
+    1201,
+    2529
+   ],
+   "ids_b": [
+    1146,
+    1148,
+    1201,
+    2529
+   ],
+   "nb_null": 0
+  },
+  {
+   "game_id": "0021501064",
+   "ids_a": [
+    1151,
+    1204
+   ],
+   "ids_b": [
+    1151,
+    1179,
+    1204
+   ],
+   "nb_null": 0
+  },
+  {
+   "game_id": "0021501207",
+   "ids_a": [
+    1662,
+    2715,
+    202026
+   ],
+   "ids_b": [
+    1164,
+    1662,
+    2715,
+    202026
+   ],
+   "nb_null": 0
+  }
+ ],
+ "l2m_games": 410,
+ "l2m_agree_exactly": 410,
+ "l2m_subset_of_ours": 410,
+ "output": "$NBA_DATA_ROOT\\scratch\\l5\\referees_2015_16.parquet"
+}

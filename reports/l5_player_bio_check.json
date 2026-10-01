@@ -1,0 +1,38 @@
+{
+ "box_players_2015_16": 478,
+ "all_seasons_rows_2015_16": 476,
+ "height_weight_coverage_box_players": 0.99581589958159,
+ "wingspan_coverage_box_players": 0.6715481171548117,
+ "tracked_roster_players": 450,
+ "height_weight_coverage_tracked": 1.0,
+ "wingspan_coverage_tracked": 0.6755555555555556,
+ "bio_match": {
+  "name+team": 468,
+  "null": 2,
+  "name": 8
+ },
+ "combine_match": {
+  "null": 157,
+  "name": 320,
+  "name+year": 1
+ },
+ "all_seasons_rows_unmatched": [],
+ "median_height_by_position_tracked": [
+  {
+   "p": "C",
+   "len": 66,
+   "median_height_cm": 213.36000061035156
+  },
+  {
+   "p": "F",
+   "len": 187,
+   "median_height_cm": 205.74000549316406
+  },
+  {
+   "p": "G",
+   "len": 197,
+   "median_height_cm": 193.0399932861328
+  }
+ ],
+ "output": "$NBA_DATA_ROOT\\scratch\\l5\\player_bio_2015_16.parquet"
+}
