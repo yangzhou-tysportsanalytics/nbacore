@@ -14,9 +14,15 @@ frame-level table is redistributed.
 ## Install
 
 ```bash
-uv sync                                  # Python >= 3.11
-export NBA_DATA_ROOT=/path/to/nba_data   # default: ./nba_data
+uv sync                                  # Python >= 3.11 (tested with 3.12 and uv 0.12)
+export NBA_DATA_ROOT=/path/to/nba_data   # required, see below
 ```
+
+**Set `NBA_DATA_ROOT`.** Every script and loader reads and writes the data under this directory
+(raw downloads, builds, releases). If it is not set, the default is `nba_data` in the *current
+working directory*, so a rebuild started from another directory will not find the data. Use an
+absolute path, on a disk with enough free space (below), and set it in every shell that runs
+nbacore or a project that depends on it.
 
 ## Rebuild the data
 
@@ -32,7 +38,17 @@ uv run python scripts/build_ghost_v1_l2release.py --base v1.0 --l2 scratch/l2 --
 uv run python scripts/publish_release.py --version v1.1 --base v1.0 --l2-build scratch/l2 --l3-build scratch/l3
 ```
 
-A full build of the 631 usable games takes several hours on a 16 GB machine. The L5 external
+**Resources** (measured on a 16 GB, 22-thread Windows laptop):
+
+| step | disk | time |
+|---|---|---|
+| raw download (636 archives + play-by-play) | 3.6 GB | 30–45 min, depending on the connection |
+| L1 build | about 63 GB of extracted JSON under `$NBA_DATA_ROOT/scratch/extracted` (can be deleted afterwards) plus 4.5 GB of tables | 35–60 min with 4 workers |
+| L2 and L3 builds | about 1 GB | about 3 h with 2 workers (3.5 CPU-hours for L2, 1.2 for L3) |
+| one published release | about 5.5 GB (unchanged layers are hard-linked between releases) | minutes |
+
+With 16 GB of memory, use at most 4 workers for L1 and 3 for L2 / L3 (the settings used for the
+published releases). The L5 external
 tables need source files that must be obtained manually (some require an account); see
 `docs/external_sources.md`. Release history: `CHANGELOG.md`.
 
