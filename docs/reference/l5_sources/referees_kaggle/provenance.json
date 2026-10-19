@@ -1,0 +1,20 @@
+{
+  "dataset": "referees_kaggle",
+  "files": {
+    "2012-18_officialBoxScore.csv.zip": {
+      "bytes": 2533708,
+      "sha256": "e8f88eead3ffc4cb8760d01d34e6815c561277e3257d22a793daca7bf56a38c3",
+      "source": "https://www.kaggle.com/datasets/pablote/nba-enhanced-stats (2012-18_officialBoxScore.csv, zipped by Kaggle)",
+      "use": "fills the 106 games missing in the primary source (names, date + teams); covers all 1,230 games"
+    },
+    "officials.csv": {
+      "bytes": 2335666,
+      "sha256": "1ebcfe4cea69d82ba643b72029184874aabbe06749213f47eeb5219a39058fd1",
+      "source": "https://www.kaggle.com/datasets/wyattowalsh/basketball (csv/officials.csv; pipeline https://github.com/wyattowalsh/nbadb; from stats.nba.com box score summaries)",
+      "use": "primary: game_id, official_id, names, jersey; 2015-16: 1,124 of 1,230 games"
+    }
+  },
+  "license": "both CC BY-SA 4.0 (attribution; derived data under the same license)",
+  "terms": "Local research copy only, not redistributed; outputs credit wyattowalsh / pablote (Kaggle) and NBA.com; derived tables carry CC BY-SA 4.0.",
+  "retrieved": "2026-09-27"
+}

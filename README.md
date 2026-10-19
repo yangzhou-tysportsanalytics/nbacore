@@ -26,31 +26,29 @@ nbacore or a project that depends on it.
 
 ## Rebuild the data
 
+The complete data version `v1.6`, including the L5 external tables, is rebuilt from the public
+sources by one command. The command is `scripts/rebuild_v1_6.py` on `main`, which runs the code of
+tag `data-v1.6`. A verified rebuild reproduced every file: 3,808 of 3,809 byte-identical, and one
+with the same content in another row order. Steps, sources and measured resources:
+`docs/rebuild.md`.
+
 ```bash
-uv run python scripts/download_raw.py --config large          # all archives + 2015-16 pbp
-uv run python scripts/build_l1.py --all --out scratch/l1_full --workers 4
-uv run python scripts/publish_release.py --version v1.0 --build scratch/l1_full
-uv run python scripts/build_l2.py --base v1.0 --out scratch/l2 --workers 3
-uv run python scripts/build_event_frames.py --l2-build scratch/l2 --base v1.0
-uv run python scripts/build_l3.py --base v1.0 --l2 scratch/l2 --out scratch/l3 --workers 3
-uv run python scripts/build_event_possession.py --l2 scratch/l2 --l3 scratch/l3
-uv run python scripts/build_ghost_v1_l2release.py --base v1.0 --l2 scratch/l2 --l3 scratch/l3 --out scratch/l3
-uv run python scripts/publish_release.py --version v1.1 --base v1.0 --l2-build scratch/l2 --l3-build scratch/l3
+git clone https://github.com/yangzhou-tysportsanalytics/nbacore.git nbacore
+git -C nbacore worktree add ../nbacore-v1.6 data-v1.6
+cd nbacore-v1.6 && uv sync --locked
+uv run --locked --with psutil python ../nbacore/scripts/rebuild_v1_6.py --code .     --data-root /path/to/nba_data --reference ../nbacore/docs/reference/v1.6_files.json
 ```
 
-**Resources** (measured on a 16 GB, 22-thread Windows laptop):
+**Resources** (measured 2026-10-19 on a 16 GB, 22-thread Windows laptop):
 
-| step | disk | time |
-|---|---|---|
-| raw download (636 archives + play-by-play) | 3.6 GB | 30–45 min, depending on the connection |
-| L1 build | about 63 GB of extracted JSON under `$NBA_DATA_ROOT/scratch/extracted` (can be deleted afterwards) plus 4.5 GB of tables | 35–60 min with 4 workers |
-| L2 and L3 builds | about 1 GB | about 3 h with 2 workers (3.5 CPU-hours for L2, 1.2 for L3) |
-| one published release | about 5.5 GB (unchanged layers are hard-linked between releases) | minutes |
+| | |
+|---|---|
+| time | about 2 h 40 min of compute (L1 27 min, L2 80 min, L3 and the rest 55 min), plus 30–45 min of download |
+| memory | peak 10.0 GB (L1 with 4 workers); every later step stays under 7 GB |
+| disk | about 80 GB free: 61 GB of extracted JSON (only needed during L1), 4.5 GB of L1 tables, about 5.5 GB per release (unchanged files are hard-linked) |
 
-With 16 GB of memory, use at most 4 workers for L1 and 3 for L2 / L3 (the settings used for the
-published releases). The L5 external
-tables need source files that must be obtained manually (some require an account); see
-`docs/external_sources.md`. Release history: `CHANGELOG.md`.
+The L5 external tables need source files that must be obtained manually (some require an
+account); see `docs/external_sources.md`. Release history: `CHANGELOG.md`.
 
 ## Derived data packages
 

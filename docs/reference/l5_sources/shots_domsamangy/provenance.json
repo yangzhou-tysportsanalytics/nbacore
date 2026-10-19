@@ -1,0 +1,29 @@
+{
+  "dataset": "shots_2015_16",
+  "source_repo": "https://github.com/DomSamangy/NBA_Shots_04_25",
+  "commit": "69e63559bc17393312ad258c11f93d78be002079",
+  "commit_date": "2025-06-09",
+  "files": {
+    "NBA_2016_Shots.csv.zip": {
+      "season": "2015-16",
+      "used": true,
+      "bytes": 3974407,
+      "sha256": "1eb91af015295d0457115178ed58ebd0217e58c8b24e5e9bc917d511704bd04b",
+      "rows": 207893,
+      "games": 1230
+    },
+    "NBA_2015_Shots.csv.zip": {
+      "season": "2014-15",
+      "used": false,
+      "bytes": 3952556,
+      "sha256": "73fab2570ff4c7bba446adde0c0447cb1e12cf6d7d333562c394d03f1bd8f123"
+    },
+    "README.md": {
+      "bytes": 2714,
+      "sha256": "0af5e822314b0fd95c66df9c1394dc30e5d1827ee0198a58b6eb7cd8b257bfbb"
+    }
+  },
+  "url_pattern": "https://raw.githubusercontent.com/DomSamangy/NBA_Shots_04_25/<commit>/<file>",
+  "retrieved": "2026-09-26",
+  "terms": "Repository has no license; data from NBA.com (NBA.com Terms of Use s.9: credit NBA.com, private non-commercial use only, no betting / fantasy / commercial product, no regularly updated database). Use: local research copy only, never distributed; outputs credit \"NBA.com via DomSamangy/NBA_Shots_04_25\". One-time historical snapshot."
+}

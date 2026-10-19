@@ -1,0 +1,20 @@
+{
+  "dataset": "boxscores_eoinamoore_v515",
+  "title": "NBA Dataset: Box Scores and Stats (1947 - Today), Eoin A. Moore (Kaggle), version 515",
+  "source_page": "https://www.kaggle.com/datasets/eoinamoore/historical-nba-data-and-player-box-scores",
+  "files": {
+    "Games.csv": {
+      "url": "https://www.kaggle.com/api/v1/datasets/download/eoinamoore/historical-nba-data-and-player-box-scores/Games.csv?datasetVersionNumber=515",
+      "bytes": 11208824,
+      "sha256": "8b21e7e0ebfe25f1de48c18ec701e08a47974d32be006be044b85b2661dfff29"
+    },
+    "PlayerStatistics.csv": {
+      "url": "https://www.kaggle.com/api/v1/datasets/download/eoinamoore/historical-nba-data-and-player-box-scores/PlayerStatistics.csv?datasetVersionNumber=515",
+      "bytes": 389667759,
+      "sha256": "8e5a33676661c3612bf87f185abb745254b09ab66cfee5aeccb5ae13d538c652"
+    }
+  },
+  "coverage_2015_16": "1,230 regular-season games; 31,423 player-game rows (26,078 with minutes); NBA person ids and team ids",
+  "terms": "Kaggle compilation dedicated CC0 by the uploader; the underlying data is NBA.com statistics (NBA.com Terms of Use s.9: credit NBA.com, private non-commercial use). Use here: local research copy only, not redistributed; outputs credit NBA.com via this dataset (same stance as NBA_Role_Coverage README_public.md).",
+  "retrieved": "2026-09-26"
+}

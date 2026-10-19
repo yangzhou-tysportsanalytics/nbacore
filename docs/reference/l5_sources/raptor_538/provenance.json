@@ -1,0 +1,19 @@
+{
+  "dataset": "raptor_538",
+  "source": "https://github.com/fivethirtyeight/data/tree/master/nba-raptor, commit 6d9b3277a3dc8ecd74bdef7a4f48da5bb1297bb4",
+  "license": "CC BY 4.0 (FiveThirtyEight data repository); attribution required: 'FiveThirtyEight RAPTOR'",
+  "use": "2015-16 RAPTOR (box / on-off / total, offense / defense), WAR, PREDATOR, pace impact per player",
+  "ids": "Basketball-Reference player ids; mapped as above",
+  "files": {
+    "modern_RAPTOR_by_player.csv": {
+      "bytes": 1231859,
+      "sha256": "cb64bd15492b540e5a376fcebddc1ba77b94847ee33ab26811d4123ef5fd7160"
+    },
+    "README.md": {
+      "bytes": 4102,
+      "sha256": "5e3b8fd19aece5152e8e24b7bc0098abddbd23f519d2a3e3bb534d937ceb67b4"
+    }
+  },
+  "retrieved": "2026-09-27",
+  "terms": "Local research copy only, not redistributed; outputs credit the source (and NBA / Basketball-Reference for the underlying statistics)."
+}

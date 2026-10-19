@@ -1,0 +1,21 @@
+{
+  "dataset": "player_bio_kaggle",
+  "files": {
+    "nba-player-data.zip": {
+      "contains": "all_seasons.csv (1,920,482 bytes)",
+      "source": "https://www.kaggle.com/datasets/justinas/nba-players-data (Justinas Cirtautas)",
+      "sha256": "636cdf4554e8b27766469f4223e15c26861ecf0098e8ebc3d03220478488b67b",
+      "license": "Kaggle field 'Other (specified in description)'; the description states no license. Data pulled from the NBA Stats API, 52 gaps filled from Basketball-Reference.",
+      "use": "height (cm), weight (kg) per season; 2015-16: 476 players, names only (no NBA ids)"
+    },
+    "nba-anthropometric.zip": {
+      "contains": "NBA_Anthropometric.csv (107,373 bytes)",
+      "source": "https://www.kaggle.com/datasets/tymoteuszdobrucki/nba-anthropometric (Timmy)",
+      "sha256": "d13f7a3af140d01d77d417d0de57ef95a5f2aaae1f0e6cd4037882dc1b9d9527",
+      "license": "CC BY 4.0 (attribution required); data from the NBA Stats draft combine anthropometric endpoint, converted to metric",
+      "use": "wingspan, standing reach (cm) from draft combines 2000-2023; players without a combine measurement have none"
+    }
+  },
+  "terms": "Local research copy only, not redistributed; outputs credit NBA.com / NBA Stats via the two Kaggle datasets, with CC BY attribution for the anthropometric dataset. NBA.com Terms of Use s.9 apply to the underlying statistics.",
+  "retrieved": "2026-09-26"
+}
